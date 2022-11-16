@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>WebSocker Client</title>
+
+</head>
+
+<body>
+
+<button onclick="contactServer()">Click Here</button>
+
+</body>
+
+<script>
+
+    const socket = new WebSocket('ws://localhost:8000');
+
+    socket.addEventListener('open', function (event) {
+        socket.send('Connection Established');
+
+    });
+
+
+    socket.addEventListener('message', function (event) {
+        console.log("okok",event.data)
+        var reader = new FileReader();
+        reader.onload = function () {
+            console.log("okokdata",reader.result)
+        }
+        reader.readAsText(event.data);
+
+    });
+
+    socket.addEventListener('close', function (event) {
+    });
+
+    const contactServer = () => {
+        socket.send();
+
+    }
+
+    const convertDataType1= (data)=>{
+        data = []
+        if (false){
+            return {
+                err: " awdawdawd",
+                des: " dadwadawdawd"
+            }
+        }
+        return {
+            type : 1,
+            length : 100,
+            ship_place : [
+                {
+                    head: [0,1],
+                    tail: [5,6]
+                },
+                                {
+                    head: [0,1],
+                    tail: [5,6]
+                },
+                                {
+                    head: [0,1],
+                    tail: [5,6]
+                }
+            ]
+        }
+    }
+
+</script>
+
+</html>

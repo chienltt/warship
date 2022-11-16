@@ -1,0 +1,9 @@
+HOST = "127.0.0.1"  # Standard loopback interface address (localhost)
+PORT = 65430  # Port to listen on (non-privileged ports are > 1023)
+ngrok_ip = "0.tcp.ap.ngrok.io"
+ngrok_port = 15376
+game_name = "battle ship"
+game_des = "none"
+game_author = "something very secret"
+championship_server_host = "104.194.240.16"
+championship_server_port = 8881
