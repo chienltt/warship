@@ -21,59 +21,64 @@
 </body>
 
 <script>
+    const pkt_hello = (uuid, match_id, secretKey) => {
+        return JSON.stringify({
+            type: 0,
+            uuid: uuid,
+            match_id: match_id,
+            secretKey: secretKey
+        })
+    } 
+
+    const pkt_place_ship = (numberOfShips, coordinates) => {
+        /*
+            coordinates = [
+                {
+                    head: {x : 1, y: 2},
+                    tail: {x: 2, y: 3}
+                },
+                {
+                    head: {x : 1, y: 2},
+                    tail: {x: 2, y: 3}
+                },
+                {
+                    head: {x : 1, y: 2},
+                    tail: {x: 2, y: 3}
+                },
+            ]
+        */
+        data = {
+            type: 3,
+            numberOfShips: numberOfShips,
+            coordinates: coordinates
+        }
+
+        return JSON.stringify(data);
+    }
 
     const socket = new WebSocket('ws://localhost:8000');
 
     socket.addEventListener('open', function (event) {
-        socket.send('Connection Established');
+        socket.send(pkt_hello("hoang", "match_id1", "secret"));
 
     });
 
 
     socket.addEventListener('message', function (event) {
-        console.log("okok",event.data)
-        var reader = new FileReader();
-        reader.onload = function () {
-            console.log("okokdata",reader.result)
-        }
-        reader.readAsText(event.data);
-
+        console.log("pkt start",event.data)
+        console.log("typedata", typeof event.data);
+        pktstart = JSON.parse(event.data);
+        console.log("type>>", pktstart.type);
+        console.log("uuid>>", pktstart.uuid);
+        console.log("op_Uuid>>", pktstart.op_uuild);
+        console.log("match_id>>", pktstart.match_id);
     });
 
     socket.addEventListener('close', function (event) {
     });
 
     const contactServer = () => {
-        socket.send();
-
-    }
-
-    const convertDataType1= (data)=>{
-        data = []
-        if (false){
-            return {
-                err: " awdawdawd",
-                des: " dadwadawdawd"
-            }
-        }
-        return {
-            type : 1,
-            length : 100,
-            ship_place : [
-                {
-                    head: [0,1],
-                    tail: [5,6]
-                },
-                                {
-                    head: [0,1],
-                    tail: [5,6]
-                },
-                                {
-                    head: [0,1],
-                    tail: [5,6]
-                }
-            ]
-        }
+        socket.send([{x: 3, y : 5}])
     }
 
 </script>
