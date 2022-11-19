@@ -21,15 +21,26 @@
 </body>
 
 <script>
+    // 1: pkt_hello
     const pkt_hello = (uuid, match_id, secretKey) => {
-        return JSON.stringify({
+        let data = {
             type: 0,
             uuid: uuid,
             match_id: match_id,
             secretKey: secretKey
-        })
+        }
+        return JSON.stringify(data)
     } 
 
+    // 2: pkt_ok
+    const pkt_ok = ()  => {
+        let data = {
+            type: 1
+        }
+        return JSON.stringify(data)
+    }
+
+    // 3: pkt_place_ship
     const pkt_place_ship = (numberOfShips, coordinates) => {
         /*
             coordinates = [
@@ -47,13 +58,24 @@
                 },
             ]
         */
-        data = {
+        let data = {
             type: 3,
             numberOfShips: numberOfShips,
             coordinates: coordinates
         }
 
         return JSON.stringify(data);
+    }
+
+    // 5: pkt_fire
+    //  coordinates = [{"x": x1, "y": y1}, {"x": x2, "y": y2},...]
+    const pkt_fire = (number_of_shoots, coordinates) => {
+        let data = {
+            type: 5,
+            number_of_shoots: number_of_shoots,
+            coordinates: coordinates
+        }
+        return JSON.stringify(data)
     }
 
     const socket = new WebSocket('ws://localhost:8000');
