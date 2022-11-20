@@ -102,3 +102,9 @@ def pkt_bye():
         "type": 12
     }
     return json.dumps(data)
+
+def pkt_client_secret(secret):
+    data = {
+        "type": 13,
+        "secret": secret
+    }
