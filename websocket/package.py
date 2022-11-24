@@ -1,7 +1,5 @@
 import json
 
-from helper import convertStrToInt
-
 ngrok_ip = "0.tcp.ap.ngrok.io"
 ngrok_port = 17618
 game_name = "warship"

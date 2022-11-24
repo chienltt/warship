@@ -7,6 +7,10 @@ class Match:
         self.secret_key = secret_key
         self.status = "wait"
         self.client_list = []
+        self.turn = {
+            "index": 0,
+            "list_bullets": []
+        }
 
     def add_client(self, client):
         if len(self.client_list) > 1 or self.status != "wait":
@@ -24,6 +28,19 @@ class Match:
             self.status = "place_ship"
         return
 
+    def check_all_client_placed_ship(self):
+        for client in self.client_list:
+            if not client.is_place_ship:
+                return False
+        self.status = "playing"
+        self.turn["index"] += 1
+        return True
+
+    def check_all_client_fired(self):
+        if len(self.turn["list_bullets"]) == len(self.client_list):
+            return True
+        return False
+
     def client_place_ship(self, client_id, list_ships):
         for client in self.client_list:
             if client.client_id == client_id:
@@ -31,3 +48,19 @@ class Match:
                 return ok, msg
 
         return False, "Invalid client id"
+
+    def client_fire(self, client_id, list_bullets):
+        for client in self.client_list:
+            if client.client_id == client_id:
+                self.turn["list_bullets"].append(client_id, list_bullets)
+
+    def get_enemy(self, client_id):
+        for client in self.client_list:
+            if client.client_id != client_id:
+                return client
+        return None
+
+    def get_list_bullets(self, client_id):
+        for _client_id, list_bullets in self.turn["list_bullets"]:
+            if _client_id == client_id:
+                return list_bullets

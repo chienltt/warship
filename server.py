@@ -52,3 +52,4 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     #     + bytes(game_des, 'utf-8') + (
     #         len(game_author)).to_bytes(4, 'little')
     #     + bytes(game_author, 'utf-8'))
+
