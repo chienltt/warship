@@ -1,14 +1,15 @@
 import asyncio
 import json
 import sys
+
 import websockets
 
 sys.path.append("/home/chien/PycharmProjects/python_network_programming"
                 "/warship")
 
-from warship.websocket.controller import find_match, handle_package_hello, \
-    check_client_identity
-from warship.websocket.package import pkt_error, pkt_wait
+from controller import (LIST_CONTROLLER, check_client_identity, find_match,
+                        handle_package_hello)
+from package import pkt_error, pkt_wait
 
 ngrok_ip = "0.tcp.ap.ngrok.io"
 ngrok_port = 17618
@@ -27,12 +28,10 @@ List_websocket = []
 async def handler(websocket, path):
     while True:
         data = await websocket.recv()
-        if data['type'] == 0:
-            await handle_package_hello(websocket, data)
-        else:
-            ok = check_client_identity(data)
-            if not ok:
-                await websocket.send(pkt_error("invalid client information"))
+        data_recv = json.loads(data)
+        for (type, controller) in LIST_CONTROLLER:
+            if type == data_recv["type"]:
+                await controller(websocket, data_recv)
         # TO DO : ...
 
 
@@ -42,3 +41,5 @@ def run_server():
     asyncio.get_event_loop().run_until_complete(start_server)
 
     asyncio.get_event_loop().run_forever()
+
+run_server()

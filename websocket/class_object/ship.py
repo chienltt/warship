@@ -8,19 +8,19 @@ class Ship:
 
     @staticmethod
     def chec_coor(top_left_cor, bot_right_cor):
-        if abs(top_left_cor[0] - bot_right_cor[0]) == 2:
-            if abs(top_left_cor[1] - bot_right_cor[1]) == 2:
+        if abs(top_left_cor[0] - bot_right_cor[0]) == 1:
+            if abs(top_left_cor[1] - bot_right_cor[1]) == 1:
                 return 1
-            if abs(top_left_cor[1] - bot_right_cor[1]) == 4:
+            if abs(top_left_cor[1] - bot_right_cor[1]) == 3:
                 return 2
-            if abs(top_left_cor[1] - bot_right_cor[1]) == 6:
+            if abs(top_left_cor[1] - bot_right_cor[1]) == 5:
                 return 3
 
-        if abs(top_left_cor[1] - bot_right_cor[1]) == 2:
-            if abs(top_left_cor[0] - bot_right_cor[0]) == 2:
+        if abs(top_left_cor[1] - bot_right_cor[1]) == 1:
+            if abs(top_left_cor[0] - bot_right_cor[0]) == 1:
                 return 1
-            if abs(top_left_cor[0] - bot_right_cor[0]) == 4:
+            if abs(top_left_cor[0] - bot_right_cor[0]) == 3:
                 return 2
-            if abs(top_left_cor[0] - bot_right_cor[0]) == 6:
+            if abs(top_left_cor[0] - bot_right_cor[0]) == 5:
                 return 3
         return 0

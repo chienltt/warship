@@ -55,19 +55,22 @@ def pkt_enemy_fired(number_of_shots, coordinates):
 #   "tail": {x: x4, y: y4}
 #  },
 # ]
-def pkt_destroyed(destroyed_ships, coordinates):
+def pkt_destroyed(number_destroyed_ships, destroyed_ships):
+    ships = []
+    for ship in destroyed_ships:
+        ships.append([ship.top_left_cor, ship.bot_right_cor])
     data = {
         "type": 6,
-        "destroyed_ships": destroyed_ships,
-        "coordinates": coordinates
+        "number_destroyed_ships": number_destroyed_ships,
+        "destroyed_ships": ships
     }
     return json.dumps(data)
 
 # 8: pkt_victory
-def pkt_victory(uuid):
+def pkt_victory(client_id):
     data = {
         "type": 8,
-        "uuid": uuid
+        "uuid": client_id
     }
     return json.dumps(data)
 
@@ -106,3 +109,4 @@ def pkt_client_secret(secret):
         "type": 13,
         "secret": secret
     }
+    return json.dumps(data)

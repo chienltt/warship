@@ -1,6 +1,6 @@
 import math
 
-from warship.websocket.controller import LIST_CLIENT
+from controller import LIST_CLIENT
 
 
 def get_len(data):

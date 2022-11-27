@@ -1,12 +1,21 @@
-from warship.websocket.class_object.ship import Ship
+from class_object.ship import Ship
 
 
 class Client:
-    def __init__(self, client_id, secret, websocket):
+    def __init__(self, client_id, secret):
         self.client_id = client_id
         self.secret = secret
         self.ship_list = []
         self.is_place_ship = False
+        self.connection = None
+
+    def is_connected(self):
+        return False if self.connection == None else True
+    
+    def get_connection(self):
+        return self.connection
+
+    def connect_to(self, websocket):
         self.connection = websocket
 
     def place_list_ship(self, list_ship):
@@ -23,7 +32,7 @@ class Client:
         if type == 0:
             return False
         new_ship = Ship(top_left_cor, bot_right_cor, type)
-        if not self.check_duplicate_locate(new_ship):
+        if self.check_duplicate_locate(new_ship):
             return False
         self.ship_list.append(new_ship)
         return True
@@ -38,11 +47,13 @@ class Client:
                                     ship.bot_right_cor[0] + 1) and col in \
                             range(ship.top_left_cor[1],
                                   ship.bot_right_cor[1] + 1):
-                        return False
-        return True
+                        return True
+        return False
 
     def get_num_bullets(self):
         sum = 0
         for ship in self.ship_list:
             sum = sum + ship.type
         return sum
+
+    
