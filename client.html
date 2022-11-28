@@ -16,63 +16,74 @@
 
 <body>
 
-<button onclick="contactServer()">Click Here</button>
+    <form class="form" action="">
+        <label for="">
+            <span>UserID</span>
+            <input type="text" name="client_id" />
+        </label>
+        <label for="">
+            <span>MatchID</span>
+            <input type="text" name="match_id" />
+        </label>
+        <label for="">
+            <span>Secret Key</span>
+            <input type="password" name="secret_key" />
+        </label>
+        <input type="submit" value="PKT_HELLO">
+    </form>
+
+    <button onclick="send_pkt_ok()">PKT_OK</button>
+    <button onclick="send_pkt_place_ship1()">PKT_PLACE_SHIP ID 1</button>
+    <button onclick="send_pkt_place_ship2()">PKT_PLACE_SHIP ID 2</button>
+    <button onclick="send_fire1()">PKT_FIRE ID 1</button>
+    <button onclick="send_fire2()">PKT_FIRE ID 2</button>
+    <button onclick="send_bye()">PKT_BYE</button>
 
 </body>
 
 <script>
     // 1: pkt_hello
-    const pkt_hello = (uuid, match_id, secretKey) => {
+    let client1, client2, match_id;
+    const pkt_hello = (client_id, match_id, secretKey) => {
         let data = {
             type: 0,
-            uuid: uuid,
+            client_id: client_id,
             match_id: match_id,
-            secretKey: secretKey
+            secret_key: secretKey
         }
         return JSON.stringify(data)
-    } 
+    }
 
     // 2: pkt_ok
-    const pkt_ok = ()  => {
+    const pkt_ok = () => {
         let data = {
-            type: 1
+            type: 2
         }
         return JSON.stringify(data)
     }
 
     // 3: pkt_place_ship
-    const pkt_place_ship = (numberOfShips, coordinates) => {
-        /*
-            coordinates = [
-                {
-                    head: {x : 1, y: 2},
-                    tail: {x: 2, y: 3}
-                },
-                {
-                    head: {x : 1, y: 2},
-                    tail: {x: 2, y: 3}
-                },
-                {
-                    head: {x : 1, y: 2},
-                    tail: {x: 2, y: 3}
-                },
-            ]
-        */
+    const pkt_place_ship = (client_id, match_id, number_of_ships, list_ships) => {
+        // list_ships = [[[tọa độ trái trên],[tọa độ phải dưới]], ...]
         let data = {
             type: 3,
-            numberOfShips: numberOfShips,
-            coordinates: coordinates
+            client_id: client_id,
+            match_id: match_id,
+            number_of_ships: number_of_ships,
+            list_ships: list_ships
         }
 
         return JSON.stringify(data);
     }
 
     // 5: pkt_fire
-    //  coordinates = [{"x": x1, "y": y1}, {"x": x2, "y": y2},...]
-    const pkt_fire = (number_of_shoots, coordinates) => {
+    //  coordinates = [[x1, y1], [x2, y2],...]
+    const pkt_fire = (client_id, match_id, number_of_bullets, coordinates) => {
         let data = {
             type: 5,
-            number_of_shoots: number_of_shoots,
+            client_id: client_id,
+            match_id: match_id,
+            number_of_bullets: number_of_bullets,
             coordinates: coordinates
         }
         return JSON.stringify(data)
@@ -80,28 +91,69 @@
 
     const socket = new WebSocket('ws://localhost:8000');
 
-    socket.addEventListener('open', function (event) {
-        socket.send(pkt_hello("hoang", "match_id1", "secret"));
 
+
+    socket.addEventListener('open', function (event) {
+        // socket.send(pkt_hello(new Date(), "match_id", "secret"));
     });
 
 
     socket.addEventListener('message', function (event) {
-        console.log("pkt start",event.data)
-        console.log("typedata", typeof event.data);
-        pktstart = JSON.parse(event.data);
-        console.log("type>>", pktstart.type);
-        console.log("uuid>>", pktstart.uuid);
-        console.log("op_Uuid>>", pktstart.op_uuild);
-        console.log("match_id>>", pktstart.match_id);
+        data_recv = JSON.parse(event.data);
+        console.log("datarecv >>>>", data_recv);
     });
 
     socket.addEventListener('close', function (event) {
     });
 
-    const contactServer = () => {
-        socket.send([{x: 3, y : 5}])
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const formProps = Object.fromEntries(formData);
+        console.log(formProps);
+
+        let pkt_0_hello = pkt_hello(formProps.client_id, formProps.match_id, formProps.secret_key);
+        socket.send(pkt_0_hello);
     }
+
+    const form = document.querySelector(".form");
+    form.addEventListener("submit", (e) => handleSubmit(e))
+
+    const send_pkt_ok = () => {
+
+    }
+
+    const send_pkt_place_ship1 = () => {
+        list_ships = [
+            [[1, 1], [2, 2]],
+            [[3, 1], [4, 4]],
+            [[1, 7], [6, 8]]
+        ]
+        socket.send(pkt_place_ship('1', '1', 3, list_ships))
+    }
+    const send_pkt_place_ship2 = () => {
+        list_ships = [
+            [[1, 1], [2, 2]],
+            [[3, 1], [4, 4]],
+            [[1, 7], [6, 8]]
+        ]
+        socket.send(pkt_place_ship('2', '1', 3, list_ships))
+    }
+
+    const send_fire1 = () => {
+        coordinates = [[1,1], [1, 9], [8 , 8], [3,0], [1,0], [9, 9]]
+        socket.send(pkt_fire('1', '1', 6, coordinates))
+    }
+
+    const send_fire2 = () => {
+        coordinates = [[1,1], [1, 9], [3 , 1], [3,0], [1,7]]
+        socket.send(pkt_fire('2', '1', 5, coordinates))
+    }
+
+    const send_bye = () => {
+
+    }
+
 
 </script>
 
