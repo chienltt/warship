@@ -122,9 +122,10 @@ class Match:
             return None, "Update failed, client_id is invalid"
         destroyed_ships = []
         for ship in client.ship_list:
+            print("ship in shiplist <> ", [ship.top_left_cor, ship.bot_right_cor])
+        for ship in client.ship_list:
             for bullet in list_bullets:
                 print("bullet >>> ", bullet)
-                print("ship >>> ", ship.top_left_cor, ship.bot_right_cor)
                 if bullet[0] in range(ship.top_left_cor[0], ship.bot_right_cor[0] + 1) and bullet[1] in range(ship.top_left_cor[1], ship.bot_right_cor[1] + 1):
                     destroyed_ships.append(ship)
                     client.ship_list.remove(ship)

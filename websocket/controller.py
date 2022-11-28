@@ -75,6 +75,13 @@ async def handle_package_place_ship(websocket, data):
     if not match:
         await websocket.send(pkt_error("match invalid"))
         return
+    client = match.find_client(data["client_id"])
+    if not client:
+       return
+    print(client.get_connection() == websocket)
+    if client.get_connection() != websocket:
+        await websocket.send(pkt_error("invalid"))
+        return
     # chuyen data ship thanh dạng mảng, mỗi phần tử ship là 1 mảng [[tọa độ
     # trái trên],[tọa độ phải dưới]]
     list_ships = data['list_ships']
@@ -82,12 +89,16 @@ async def handle_package_place_ship(websocket, data):
     if not ok:
         await websocket.send(pkt_error(msg))
         return
+    for ship in client.ship_list:
+        print("ship in shiplist <> ", [ship.top_left_cor, ship.bot_right_cor])
     if match.check_all_client_placed_ship():
         for client in match.client_list:
             await client.connection.send(pkt_ok())
         await match.client_list[0].connection.send(
             pkt_your_turn(match.client_list[0].get_num_bullets()))
         match.change_turn(match.client_list[0].client_id)
+        return
+    await websocket.send(pkt_wait())
     print("current_turn >>> ", match.current_turn["client_id"])
 
 
