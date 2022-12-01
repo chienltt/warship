@@ -89,6 +89,111 @@
         return JSON.stringify(data)
     }
 
+    // random ships
+
+    const inRange = (x, min, max) => {
+        return ((x - min) * (x - max) <= 0);
+    }
+
+    const check_coordinate = (y, x) => {
+
+    }
+
+    const to_array = (y, x) => {
+        return [y, x];
+    }
+
+    // Random number in range 1->max
+    const random = (max) => {
+        return Math.floor(Math.random() * max) + 1;
+    }
+
+    const Ship = (yHead, xHead, yTail, xTail) => {
+        return [[yHead, xHead], [yTail, xTail]];
+    }
+
+    // coor = [y, x], Kiểm tra xem tọa độ có trùng với tàu nào không?
+    // list_ships = [[top_left, bot_right], ...] = [[[y1,x1], [y2, x2]], [[y3,x3], [y4, x4]], ...]
+    const coor_check = (coor, list_ships) => {
+        if (list_ships) {
+            list_ships.forEach(ship => {
+                if (inRange(coor[0], ship[0][0], ship[1][0])
+                    || inRange(coor[1], ship[0, 1], ship[1, 1])) return true;
+            });
+        }
+        return false;
+    }
+
+    // Kiểm tra trùng lặp vị trí tàu
+    const check_duplicate_ship = (_ship, list_ships) => {
+        if (list_ships) {
+            list_ships.forEach(ship => {
+                for(let y = _ship[0][0]; y <= _ship[1][0]; y++) {
+                    for (let x = _ship[0][1]; x <= _ship[1][1]; x++) {
+                        if (inRange(y, ship[0][0], ship[1][0])
+                            || inRange(x, ship[0, 1], ship[1, 1])) return true;
+                    }
+                }
+            });
+        }
+        return false
+    }
+
+    const normalize_ship = ([[yHead, xHead], [yTail, xTail]]) => {
+        if (yHead > yTail) {
+            let temp = yHead;
+            yHead = yTail;
+            yTail = temp;
+        }
+        if (xHead > xTail) {
+            let temp = xHead;
+            xHead = xTail;
+            xTail = temp;
+        }
+        return [[yHead, xHead], [yTail, xTail]];
+    }
+
+    const ship_random_direction = (yHead, xHead, type) => {
+        count = 0;
+        while (count < 4) {
+            let direct = random(8) - 1; // 0 --> 7
+            let primary_direct = Math.floor(direct / 2); // 0 for left, 1 for bottom, 2 for right, 3 for top
+            let sub = direct % 2;
+            let sub_direct = primary_direct % 2;
+            let yTail = yHead + 1 * (-1 + 2 * sub) * (1 - sub_direct) + sub_direct * (-2 + primary_direct) * (type * 2 - 1);
+            let xTail = xHead + 1 * (-1 + 2 * sub) * sub_direct + (1 - sub_direct) * (-1 + primary_direct) * (type * 2 - 1);
+            if (inRange(yTail, 0, 9) && inRange(xTail, 0, 9)) return Ship(yHead, xHead, yTail, xTail);
+            count++
+        }
+        return null;
+    }
+
+
+    const random_list_ships = (number_of_cells) => {
+        let total = 0; // cells used
+        let list_ships = []
+        while (total <= number_of_cells) {
+            let typeRandom = random(3);
+            if (total + typeRandom * 4 > number_of_cells) continue;
+
+            let yHead = random(10) - 1; // in range 0 - 9
+            let xHead = random(10) - 1;
+            if (coor_check([yHead, xHead], list_ships)) continue;
+
+            let new_ship = ship_random_direction(yHead, xHead, typeRandom);
+            if (new_ship === null) continue;
+            console.log("new ship >>> ", new_ship);
+            let normalized_new_ship = normalize_ship(new_ship); // normalize to form [top_left, bot_right]
+            console.log("normalized ship >>> ", normalized_new_ship);
+            if (check_duplicate_ship(normalize_ship)) continue;
+            list_ships.push(normalized_new_ship)
+            total += typeRandom * 4;
+            if (total + 4 > number_of_cells) break
+        }
+        return { total, list_ships }
+    }
+    //------------------ end random ships
+
     const socket = new WebSocket('ws://localhost:8000');
 
 
@@ -141,12 +246,12 @@
     }
 
     const send_fire1 = () => {
-        coordinates = [[1,1], [1, 9], [8 , 8], [3,0], [1,0], [9, 9]]
+        coordinates = [[1, 1], [1, 9], [8, 8], [3, 0], [1, 0], [9, 9]]
         socket.send(pkt_fire('1', '1', 6, coordinates))
     }
 
     const send_fire2 = () => {
-        coordinates = [[1,1], [1, 9], [3 , 1], [3,0], [1,7]]
+        coordinates = [[1, 1], [1, 9], [3, 1], [3, 0], [1, 7]]
         socket.send(pkt_fire('2', '1', 5, coordinates))
     }
 

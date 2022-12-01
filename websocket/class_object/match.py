@@ -135,6 +135,7 @@ class Match:
         client = self.find_client(client_id)
         if not client or len(client.ship_list) > 0:
             return False
+        self.status = "finished"
         return True
 
     def change_turn(self, client_id):

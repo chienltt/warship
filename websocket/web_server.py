@@ -24,6 +24,13 @@ championship_server_port = 8881
 # create handler for each connection
 List_websocket = []
 
+async def send_web(data):
+    async with websockets.connect("ws://{}:{}".format(
+            championship_server_host, championship_server_port)) as websocket:
+        print("send data: ",data)
+        await websocket.send(data)
+    msg = await websocket.recv()
+    print("recv data",msg)
 
 async def handler(websocket, path):
     while True:

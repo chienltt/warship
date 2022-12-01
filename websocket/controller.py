@@ -144,7 +144,7 @@ async def handle_package_fire1(websocket, data):
         await websocket.send(pkt_victory(client_id))
         await enemy_ws.send(pkt_defeat(enemy.client_id))
         await websocket.send(pkt_bye())
-        await enemy_ws.send(pkt_bye)
+        await enemy_ws.send(pkt_bye())
         return
     
     await enemy_ws.send(pkt_your_turn(enemy.get_num_bullets()))
