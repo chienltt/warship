@@ -29,6 +29,8 @@ class Client:
 
     def place_ship(self, top_left_cor, bot_right_cor):
         type = Ship.chec_coor(top_left_cor, bot_right_cor)
+        print("coor >>>", top_left_cor, bot_right_cor)
+        print("check type >>>", type)
         if type == 0:
             return False
         new_ship = Ship(top_left_cor, bot_right_cor, type)
