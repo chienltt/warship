@@ -118,7 +118,7 @@
         if (list_ships) {
             list_ships.forEach(ship => {
                 if (inRange(coor[0], ship[0][0], ship[1][0])
-                    || inRange(coor[1], ship[0, 1], ship[1, 1])) return true;
+                    || inRange(coor[1], ship[0][1], ship[1][1])) return true;
             });
         }
         return false;
@@ -131,7 +131,7 @@
                 for(let y = _ship[0][0]; y <= _ship[1][0]; y++) {
                     for (let x = _ship[0][1]; x <= _ship[1][1]; x++) {
                         if (inRange(y, ship[0][0], ship[1][0])
-                            || inRange(x, ship[0, 1], ship[1, 1])) return true;
+                            || inRange(x, ship[0][1], ship[1][1])) return true;
                     }
                 }
             });
@@ -185,7 +185,7 @@
             console.log("new ship >>> ", new_ship);
             let normalized_new_ship = normalize_ship(new_ship); // normalize to form [top_left, bot_right]
             console.log("normalized ship >>> ", normalized_new_ship);
-            if (check_duplicate_ship(normalize_ship)) continue;
+            if (check_duplicate_ship(normalized_new_ship, list_ships)) continue;
             list_ships.push(normalized_new_ship)
             total += typeRandom * 4;
             if (total + 4 > number_of_cells) break
