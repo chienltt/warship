@@ -11,8 +11,8 @@ from warship.websocket.package import (pkt_bye, pkt_client_secret, pkt_defeat,
                                        pkt_start,
                                        pkt_victory, pkt_wait, pkt_your_turn)
 
-LIST_MATCH = [Match('32', "12345", '15', '1')]
-LIST_CLIENT = [Client('15', "12345"), Client('1', "12345")]
+LIST_MATCH = []
+LIST_CLIENT = []
 
 
 def main_controller():
