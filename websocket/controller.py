@@ -139,7 +139,7 @@ async def handle_package_fire1(websocket, data):
     destroyed_ships, msg = match.update_list_ships(enemy.client_id, list_bullets)
     await websocket.send(pkt_destroyed(len(destroyed_ships), destroyed_ships))
 
-    check_win = match.check_win(client_id)
+    check_win = match.check_win()
     if check_win:
         await websocket.send(pkt_victory(client_id))
         await enemy_ws.send(pkt_defeat(enemy.client_id))
@@ -150,12 +150,12 @@ async def handle_package_fire1(websocket, data):
     await enemy_ws.send(pkt_your_turn(enemy.get_num_bullets()))
     match.change_turn(enemy.client_id)
 
-
- 
-
+async def handle_package_bye(websocket):
+    return
 
 LIST_CONTROLLER = [
     (0, handle_package_hello),
     (3, handle_package_place_ship),
     (5, handle_package_fire1)
+    # (12, handle_package_bye)
 ]

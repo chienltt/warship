@@ -123,20 +123,21 @@ class Match:
         destroyed_ships = []
         for ship in client.ship_list:
             print("ship in shiplist <> ", [ship.top_left_cor, ship.bot_right_cor])
-        for ship in client.ship_list:
-            for bullet in list_bullets:
+        for bullet in list_bullets:
+            for ship in client.ship_list:
                 print("bullet >>> ", bullet)
                 if bullet[0] in range(ship.top_left_cor[0], ship.bot_right_cor[0] + 1) and bullet[1] in range(ship.top_left_cor[1], ship.bot_right_cor[1] + 1):
                     destroyed_ships.append(ship)
                     client.ship_list.remove(ship)
         return destroyed_ships, "Updated successfully"
 
-    def check_win(self, client_id):
-        client = self.find_client(client_id)
-        if not client or len(client.ship_list) > 0:
-            return False
-        self.status = "finished"
-        return True
+    def check_win(self):
+        for client in self.client_list:
+            if len(client.ship_list) == 0:
+                self.status = "finished"
+                enemy = self.get_enemy(client.client_id)
+                return enemy.client_id
+        return None
 
     def change_turn(self, client_id):
         if self.status == "playing":

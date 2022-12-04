@@ -77,7 +77,7 @@ def pkt_victory(client_id):
 # 9: pkt_defeat
 def pkt_defeat(uuid):
     data = {
-        "type": 8,
+        "type": 9,
         "uuid": uuid
     }
     return json.dumps(data)
@@ -100,7 +100,7 @@ def pkt_error(error):
 # 12: pkt_bye
 def pkt_bye():
     data = {
-        "type": 12
+        "type": 12,
     }
     return json.dumps(data)
 
