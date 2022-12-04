@@ -1,4 +1,4 @@
-from class_object.client import Client
+from warship.websocket.class_object.client import Client
 
 
 class Match:

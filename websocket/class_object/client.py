@@ -1,4 +1,4 @@
-from class_object.ship import Ship
+from warship.websocket.class_object.ship import Ship
 
 
 class Client:
