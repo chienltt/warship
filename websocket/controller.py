@@ -23,6 +23,7 @@ championship_server_host = "104.194.240.16/ws/channels/"
 
 
 async def send_web(data):
+    print("sending data to web : ",data)
     async with websockets.connect("ws://{}".format(
             championship_server_host)) as websocket:
         print("send data: ", data)
@@ -98,10 +99,10 @@ async def handle_package_hello(websocket, data):
         return
     client, msg = match.add_connection(data["client_id"], data["secret_key"],
                                        websocket)
-    print("match status >>> ", match.get_status())
     if not client:
         await websocket.send(pkt_error(msg))
         return
+    print("match status >>> ", match.get_status())
     # ws = get_web_socket_connect(data["client_id"])
     ws = client.get_connection()
     await ws.send(pkt_wait())
@@ -191,9 +192,10 @@ async def handle_package_fire1(websocket, data):
     destroyed_ships, msg = match.update_list_ships(enemy.client_id,
                                                    list_bullets)
     await websocket.send(pkt_destroyed(len(destroyed_ships), destroyed_ships))
-
+    await send_match_info_to_web(match.id)
     check_win = match.check_win()
     if check_win:
+        print("match end")
         await websocket.send(pkt_victory(client_id))
         await enemy_ws.send(pkt_defeat(enemy.client_id))
         await websocket.send(pkt_bye())

@@ -30,9 +30,9 @@ class Match:
     
     def add_connection(self, client_id, secret, websocket):
         client = self.identify_client(client_id, secret)
-        print("Client >>>", client.client_id)
         if not client:
-            return None, "invalid client"
+            return None, "invalid client info"
+        print("Client >>>", client.client_id)
         if not client.is_connected():
             client.connect_to(websocket)
             self.check_enough_connections()

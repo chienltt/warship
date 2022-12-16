@@ -34,15 +34,18 @@ async def handler(websocket, path):
         if 'action' in data_recv:
             # tournament package
             if data_recv['action'] == 1:
+                print("Creating match >>>",data_recv)
                 if not check_client_exist(data_recv['id1'], data_recv['id2']):
                     create_match(data_recv['match'], data_recv['passwd'], data_recv[
                         'id1'], data_recv['id2'])
                     data = {
                         "result": 1,
                         "ip": "ws://0.tcp.ap.ngrok.io",
-                        "port": 17899,
+                        # server ngrok port
+                        "port": 15008,
                         "path": "path"
                     }
+                    print("Create match successfully")
                     await websocket.send(json.dumps(data))
                 else:
                     data = {
@@ -54,7 +57,7 @@ async def handler(websocket, path):
 
         else:
             for (type, controller) in LIST_CONTROLLER:
-                if type == data_recv["type"]:
+                if 'type' in data_recv:
                     await controller(websocket, data_recv)
         # TO DO : ...
 
